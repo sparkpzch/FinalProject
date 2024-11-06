@@ -8,7 +8,6 @@ public class Enemy : Character
     [SerializeField] private Rigidbody2D rb2d;
     [SerializeField] private CircleCollider2D enemyHitBox;
 
-
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
@@ -19,5 +18,14 @@ public class Enemy : Character
     void Update()
     {
 
+    }
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            Player player = other.gameObject.GetComponent<Player>();
+            player.TakeDamage(1);
+        }
     }
 }
