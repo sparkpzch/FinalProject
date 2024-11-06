@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class Player : Character
 {
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
@@ -15,6 +15,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        // 3 hearts
+        health = 3;
+
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
