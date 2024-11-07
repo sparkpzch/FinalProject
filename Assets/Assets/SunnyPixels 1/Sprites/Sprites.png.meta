@@ -557,7 +557,7 @@ TextureImporter:
         x: 145
         y: 128
         width: 15
-        height: 16
+        height: 15
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -576,7 +576,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 130
-        y: 144
+        y: 143
         width: 15
         height: 15
       alignment: 0
@@ -599,7 +599,7 @@ TextureImporter:
         x: 130
         y: 128
         width: 15
-        height: 16
+        height: 15
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -618,7 +618,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 145
-        y: 144
+        y: 143
         width: 15
         height: 15
       alignment: 0
@@ -639,7 +639,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 130
-        y: 159
+        y: 158
         width: 15
         height: 15
       alignment: 0
@@ -660,7 +660,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 145
-        y: 159
+        y: 158
         width: 15
         height: 15
       alignment: 0
@@ -681,7 +681,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 160
-        y: 159
+        y: 158
         width: 15
         height: 15
       alignment: 0
@@ -702,7 +702,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 160
-        y: 144
+        y: 143
         width: 15
         height: 15
       alignment: 0
@@ -723,7 +723,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 160
-        y: 129
+        y: 128
         width: 15
         height: 15
       alignment: 0
@@ -1268,9 +1268,9 @@ TextureImporter:
       name: Sprites_55
       rect:
         serializedVersion: 2
-        x: 112
+        x: 114
         y: 128
-        width: 16
+        width: 15
         height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
