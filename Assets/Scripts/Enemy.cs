@@ -20,11 +20,11 @@ public class Enemy : Character
 
     }
 
-    void OnCollisionEnter2D(Collision2D other)
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (collision.gameObject.tag == "Player")
         {
-            Player player = other.gameObject.GetComponent<Player>();
+            Player player = collision.gameObject.GetComponent<Player>();
             player.TakeDamage(1);
         }
     }
