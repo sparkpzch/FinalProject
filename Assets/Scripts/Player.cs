@@ -1,9 +1,13 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Player : Character
 {
     [Header("Player Stats")]
+    [SerializeField] private int initialHealth = 2;
+
+    [Header("Player Controls")]
     public float initialSpeed;
     public float moveSpeed;
     public float jumpForce;
@@ -12,6 +16,10 @@ public class Player : Character
     [Header("Components")]
     private Rigidbody2D rb;
     private Animator animator;
+
+    [Header("UI Components")]
+    public Image healthBar;
+    public Sprite[] healthBarSprites;
 
     [Header("Jumping Variables")]
     [SerializeField] private float fallMultiplier = 1f; // Fall multiplier for jumping
@@ -25,10 +33,11 @@ public class Player : Character
     public float checkRadius;
     public LayerMask whatIsGround;
 
+
     void Start()
     {
-        // 3 hearts
-        health = 3;
+        // Set initial health
+        health = initialHealth;
 
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -43,6 +52,8 @@ public class Player : Character
 
     void Update()
     {
+        healthBar.sprite = healthBarSprites[health];
+
         float moveInput = Input.GetAxis("Horizontal");
 
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
@@ -102,6 +113,9 @@ public class Player : Character
     {
         yield return new WaitForSeconds(delay);
         moveSpeed = initialSpeed * 2;
-        animator.SetBool("isRunning", true); // Set isRunning to true after speed increase
+        if (animator != null)
+        {
+            animator.SetBool("isRunning", true); // Set isRunning to true after speed increase
+        }
     }
 }

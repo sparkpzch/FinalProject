@@ -9,6 +9,7 @@ public class Character : MonoBehaviour
     public virtual void TakeDamage(int damage)
     {
         health -= damage;
+        Debug.Log($"Player took damage: {damage}, new health: {health}");
         if (health <= 0)
         {
             Die();
@@ -17,7 +18,6 @@ public class Character : MonoBehaviour
 
     public virtual void Die()
     {
-        Destroy(gameObject);
+        Debug.Log("Player died.");
     }
-
 }
