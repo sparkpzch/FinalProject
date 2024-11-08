@@ -11,14 +11,19 @@ public class Player : Character
 
     [Header("Components")]
     private Rigidbody2D rb;
-    // private Animator animator;
+    private Animator animator;
 
     [Header("Jumping Variables")]
-    [SerializeField] private float fallMultiplier = 2.5f; // Fall multiplier for jumping
+    [SerializeField] private float fallMultiplier = 1f; // Fall multiplier for jumping
     private float defaultSpeed;
 
     private float timeSinceLastMove;
     private float idleTimeLimit = 0.5f; // Time limit for idle state
+
+    [Header("Ground Check")]
+    public Transform groundCheck;
+    public float checkRadius;
+    public LayerMask whatIsGround;
 
     void Start()
     {
@@ -26,17 +31,14 @@ public class Player : Character
         health = 3;
 
         rb = GetComponent<Rigidbody2D>();
-        // animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
 
-        // Lock the rotation of the Rigidbody2D
         rb.freezeRotation = true;
 
-        // Start with the initial slower speed
         defaultSpeed = initialSpeed;
         moveSpeed = defaultSpeed;
 
-
-        StartCoroutine(IncreaseSpeedAfterDelay(1f)); // Delay the speed increase
+        StartCoroutine(IncreaseSpeedAfterDelay(1.5f)); // Delay the speed increase
     }
 
     void Update()
@@ -45,31 +47,34 @@ public class Player : Character
 
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
 
+        // Ground check
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
+
         if (moveInput != 0)
         {
-            // animator.SetBool("isRunning", true);
+            animator.SetBool("isWalking", true);
             transform.localScale = new Vector3(Mathf.Sign(moveInput), 1, 1);
             timeSinceLastMove = 0f; // Reset the timer
         }
         else
         {
-            // animator.SetBool("isRunning", false);
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isRunning", false);
             timeSinceLastMove += Time.deltaTime;
 
             if (timeSinceLastMove >= idleTimeLimit)
             {
                 moveSpeed = defaultSpeed;
-                StartCoroutine(IncreaseSpeedAfterDelay(1f)); // Restart the coroutine
+                StartCoroutine(IncreaseSpeedAfterDelay(1.5f)); // Restart the coroutine
             }
         }
 
-        if ((Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.UpArrow)) && isGrounded)
+        if (isGrounded && Input.GetButtonDown("Jump"))
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            // animator.SetTrigger("jump");
+            rb.velocity = Vector2.up * jumpForce;
         }
 
-        if (!isGrounded && rb.velocity.y < 0)
+        if (rb.velocity.y < 0)
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
@@ -97,5 +102,6 @@ public class Player : Character
     {
         yield return new WaitForSeconds(delay);
         moveSpeed = initialSpeed * 2;
+        animator.SetBool("isRunning", true); // Set isRunning to true after speed increase
     }
 }

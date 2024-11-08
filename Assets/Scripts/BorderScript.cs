@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class BorderScript : MonoBehaviour
 {
-    public GameObject[] borderObject;
+    [SerializeField, ReadOnly] private GameObject[] borderObject;
 
     void Start()
     {

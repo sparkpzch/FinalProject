@@ -5,9 +5,13 @@ using UnityEngine;
 public class CameraFollowPlayer : MonoBehaviour
 {
     [SerializeField] private Transform player;
+    [SerializeField] private GameObject background;
     public float smoothSpeed = 0.125f;
     public float zoomSpeed = 0.05f;
     public float targetOrthographicSize = 1.6f;
+    public float parallaxEffectMultiplier = 0.5f;
+
+    private Vector2 backgroundStartPosition;
 
     void Start()
     {
@@ -17,6 +21,15 @@ public class CameraFollowPlayer : MonoBehaviour
             if (playerObj != null)
             {
                 player = playerObj.transform;
+            }
+        }
+        if (background == null)
+        {
+            GameObject backgroundObj = GameObject.Find("BGL1");
+            if (backgroundObj != null)
+            {
+                background = backgroundObj;
+                backgroundStartPosition = background.transform.position;
             }
         }
     }
@@ -32,7 +45,15 @@ public class CameraFollowPlayer : MonoBehaviour
             Camera camera = GetComponent<Camera>();
             if (camera != null)
             {
-                camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, targetOrthographicSize, zoomSpeed);
+                float desiredOrthographicSize = Mathf.Lerp(camera.orthographicSize, targetOrthographicSize, zoomSpeed);
+                camera.orthographicSize = desiredOrthographicSize;
+            }
+
+            if (background != null)
+            {
+                Vector3 backgroundDesiredPosition = new Vector3(player.position.x * parallaxEffectMultiplier, player.position.y * parallaxEffectMultiplier, background.transform.position.z);
+                Vector3 backgroundSmoothedPosition = Vector3.Lerp(background.transform.position, backgroundDesiredPosition, smoothSpeed);
+                background.transform.position = backgroundSmoothedPosition;
             }
         }
     }
