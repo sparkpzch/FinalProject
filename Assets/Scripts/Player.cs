@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using Unity.Mathematics;
 
-public class Player : Character
+public class Player : Character, IShootable
 {
     [Header("Player Stats")]
     [SerializeField] private int initialHealth = 2;
@@ -41,6 +42,12 @@ public class Player : Character
     public float checkRadius;
     public LayerMask whatIsGround;
 
+    [field: SerializeField] public Transform BulletSpawnPoint { get; set; }
+    [field: SerializeField] public GameObject BulletPrefab { get; set; }
+
+    [field: SerializeField] public float CoolDown { get; set; }
+    [field: SerializeField] public float NextFireTime { get; set; }
+
     void Start()
     {
         // Set initial health
@@ -54,12 +61,18 @@ public class Player : Character
 
         defaultSpeed = initialSpeed;
         moveSpeed = defaultSpeed;
+        animator.speed = 1;
+
+        NextFireTime = 2f;
 
         StartCoroutine(IncreaseSpeedAfterDelay(1.5f)); // Delay the speed increase
     }
 
     void Update()
     {
+        // Check for Shoot Method
+        Shoot();
+
         // Update the Health Bar
         healthBar.sprite = healthBarSprites[health];
 
@@ -97,6 +110,7 @@ public class Player : Character
             if (timeSinceLastMove >= idleTimeLimit)
             {
                 moveSpeed = defaultSpeed;
+                animator.speed = 1;
                 StartCoroutine(IncreaseSpeedAfterDelay(1.5f)); // Restart the coroutine
             }
         }
@@ -116,6 +130,31 @@ public class Player : Character
         {
             animator.speed = 1;
             animator.SetBool("isRunning", false);
+        }
+    }
+
+    void FixedUpdate()
+    {
+        CoolDown += Time.deltaTime;
+    }
+
+    public void Shoot()
+    {
+        if (bullet > 0 && Input.GetKeyDown(KeyCode.Space) && CoolDown >= NextFireTime)
+        {
+            if (BulletPrefab != null && BulletSpawnPoint != null)
+            {
+                bullet--;
+                GameObject newBullet = Instantiate(BulletPrefab, BulletSpawnPoint.position, quaternion.identity);
+                newBullet.GetComponent<Weapon>().Init(1, this);
+                newBullet.transform.localScale = new Vector3(transform.localScale.x, 1, 1); // Set bullet direction
+                CoolDown = 0;
+                NextFireTime = CoolDown + 2f; // Set the next fire time to 2 seconds after the current cooldown
+            }
+            else
+            {
+                Debug.LogError("BulletPrefab or BulletSpawnPoint is not assigned");
+            }
         }
     }
 

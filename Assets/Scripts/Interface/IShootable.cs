@@ -4,8 +4,11 @@ using UnityEngine;
 
 public interface IShootable
 {
+    Transform BulletSpawnPoint { get; set; }
+    GameObject BulletPrefab { get; set; }
 
-    void Shoot(int bullet);
+    float CoolDown { get; set; }
+    float NextFireTime { get; set; }
 
-    void OnTriggerEnter2D(Collider2D collision);
+    void Shoot();
 }
