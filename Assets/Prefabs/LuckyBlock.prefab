@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6777762820778633203}
   - component: {fileID: 5178839974109632677}
   - component: {fileID: 237838030374524056}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LuckyBlock
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -160,7 +160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5472611317101651018}
   - component: {fileID: 8172848760223920741}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: downCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
