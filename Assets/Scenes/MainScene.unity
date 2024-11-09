@@ -336,11 +336,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3309660201086742164, guid: cb4d148731006b447b19673e00aa23b7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.296
+      value: 3.389
       objectReference: {fileID: 0}
     - target: {fileID: 3309660201086742164, guid: cb4d148731006b447b19673e00aa23b7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.758
+      value: 0.603
       objectReference: {fileID: 0}
     - target: {fileID: 3309660201086742164, guid: cb4d148731006b447b19673e00aa23b7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -34747,18 +34747,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4053220170387325486, guid: a1156ce582ed84840ba6475557c14b7f, type: 3}
-      propertyPath: onFalling
-      value: 
-      objectReference: {fileID: 21300000, guid: 598fb1767626f42e992bb9c2769d86ea, type: 3}
-    - target: {fileID: 4053220170387325486, guid: a1156ce582ed84840ba6475557c14b7f, type: 3}
-      propertyPath: onJumping
-      value: 
-      objectReference: {fileID: 21300000, guid: e2976d09b53264ffbbb9210a1ae1dcc0, type: 3}
-    - target: {fileID: 4053220170387325486, guid: a1156ce582ed84840ba6475557c14b7f, type: 3}
-      propertyPath: checkRadius
-      value: 0.05
-      objectReference: {fileID: 0}
     - target: {fileID: 7476742142695774790, guid: a1156ce582ed84840ba6475557c14b7f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
