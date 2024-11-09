@@ -31,6 +31,7 @@ public class bulletScript : Weapon
     {
         if (character != null && character.CompareTag("Enemy"))
         {
+            Debug.Log("Hit enemy");
             character.TakeDamage(Damage);
         }
     }
