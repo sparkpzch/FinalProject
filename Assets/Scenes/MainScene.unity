@@ -964,18 +964,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7975051715917341489, guid: 378c1a2821b994f689826dbb7a96fb31, type: 3}
-      propertyPath: chaseRange
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8432238602739644861, guid: 378c1a2821b994f689826dbb7a96fb31, type: 3}
-      propertyPath: m_Size.y
-      value: 0.16062367
-      objectReference: {fileID: 0}
-    - target: {fileID: 8432238602739644861, guid: 378c1a2821b994f689826dbb7a96fb31, type: 3}
-      propertyPath: m_Offset.y
-      value: -0.07351601
-      objectReference: {fileID: 0}
     - target: {fileID: 8779595539242685835, guid: 378c1a2821b994f689826dbb7a96fb31, type: 3}
       propertyPath: m_Name
       value: Vulture
