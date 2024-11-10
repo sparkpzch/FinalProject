@@ -4,17 +4,30 @@ using UnityEngine;
 
 public class EnemyChasePlayer : MonoBehaviour
 {
+    [Header("Components")]
     [SerializeField] private Transform player;
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private Animator animator;
+
+    [Header("Chase Settings")]
     public float chaseRange = 5f;
     public float chaseSpeed = 2f;
     public float detectionDistance = 3f;
+    public float jumpForce = 2f;
+    public float jumpCooldown = 2f;
+
+    [Header("Logic")]
     private bool movingRight = true;
     private bool chasingPlayer = false;
-    private Rigidbody2D rb;
+    private bool isGrounded = false;
+    private float jumpCooldownTimer = 0f;
 
-    // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
+
         if (player == null)
         {
             GameObject playerObj = GameObject.Find("Player");
@@ -24,20 +37,21 @@ public class EnemyChasePlayer : MonoBehaviour
             }
         }
         rb = GetComponent<Rigidbody2D>();
-
     }
 
-    // Update is called once per frame
     void Update()
     {
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
+
         if (PlayerInRange())
         {
             chasingPlayer = true;
-        } 
-
-        else if (chasingPlayer && !PlayerInRange())
+            animator.SetBool("isChasing", true);
+        }
+        else if (!PlayerInRange())
         {
             chasingPlayer = false;
+            animator.SetBool("isChasing", false);
         }
 
         if (chasingPlayer)
@@ -45,46 +59,44 @@ public class EnemyChasePlayer : MonoBehaviour
             ChasePlayer();
         }
 
-        else
+        if (jumpCooldownTimer > 0)
         {
-            OnGuard();
+            jumpCooldownTimer -= Time.deltaTime;
         }
     }
 
-    bool PlayerInRange()
+    private bool PlayerInRange()
     {
-        if (Vector2.Distance(transform.position, player.position) <= chaseRange)
-        {
-            Vector2 directionToPlayer = (player.position - transform.position).normalized;
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToPlayer, chaseRange);
-            if (hit.collider != null && hit.collider.transform == player)
-            {
-                return true;
-            }
-        }
-        return false;
+        return Vector2.Distance(transform.position, player.position) <= chaseRange;
     }
 
-    void OnGuard()
+    private void ChasePlayer()
     {
-        Vector2 direction = movingRight ? Vector2.right : Vector2.left;
-        rb.velocity = new Vector2 (direction.x * chaseSpeed, direction.y * chaseSpeed);
+        Vector2 direction = (player.position - transform.position).normalized;
+        rb.velocity = new Vector2(direction.x * chaseSpeed, direction.y * chaseSpeed);
 
-        RaycastHit2D wallHit = Physics2D.Raycast(transform.position, direction, detectionDistance);
-        RaycastHit2D groundHit = Physics2D.Raycast(transform.position + Vector3.down, direction, detectionDistance);
-
-        if (wallHit.collider != null || groundHit.collider == null)
+        if ((direction.x > 0 && !movingRight) || (direction.x < 0 && movingRight))
         {
-            movingRight = !movingRight;
-            transform.localScale = new Vector3(movingRight ? 1 : -1, 1, 1);
+            Flip();
+        }
+
+        if (isGrounded && Mathf.Abs(direction.y) > 0.5f && jumpCooldownTimer <= 0)
+        {
+            Jump();
+            jumpCooldownTimer = jumpCooldown;
         }
     }
 
-    void ChasePlayer()
+    private void Jump()
     {
-        Vector2 directionToPlayer = (player.position - transform.position).normalized;
-        rb.velocity = new Vector2(directionToPlayer.x * chaseSpeed, rb.velocity.y);
+        rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+    }
 
-        transform.localScale = new Vector3(directionToPlayer.x > 0 ? 1 : -1, 1, 1);
+    private void Flip()
+    {
+        movingRight = !movingRight;
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
     }
 }

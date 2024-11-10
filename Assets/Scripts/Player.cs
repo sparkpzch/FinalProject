@@ -27,15 +27,13 @@ public class Player : Character, IShootable
     [Header("UI Components")]
     public Image healthBar;
     public Sprite[] healthBarSprites;
-
     public TMPro.TextMeshProUGUI bulletText;
 
     [Header("Jumping Variables")]
-    [SerializeField] private float fallMultiplier = 1f; // Fall multiplier for jumping
+    [SerializeField] private float fallMultiplier = 1f;
     private float defaultSpeed;
-
     private float timeSinceLastMove;
-    private float idleTimeLimit = 0.5f; // Time limit for idle state
+    private float idleTimeLimit = 0.5f;
 
     [Header("Ground Check")]
     public Transform groundCheck;
@@ -44,93 +42,32 @@ public class Player : Character, IShootable
 
     [field: SerializeField] public Transform BulletSpawnPoint { get; set; }
     [field: SerializeField] public GameObject BulletPrefab { get; set; }
-
     [field: SerializeField] public float CoolDown { get; set; }
     [field: SerializeField] public float NextFireTime { get; set; }
 
     void Start()
     {
-        // Set initial health
         health = initialHealth;
-
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-
         rb.freezeRotation = true;
 
         defaultSpeed = initialSpeed;
         moveSpeed = defaultSpeed;
         animator.speed = 1;
-
         NextFireTime = 2f;
 
-        StartCoroutine(IncreaseSpeedAfterDelay(1.5f)); // Delay the speed increase
+        StartCoroutine(IncreaseSpeedAfterDelay(1.5f));
     }
 
     void Update()
     {
-        // Check for Shoot Method
         Shoot();
-
-        // Update the Health Bar
-        healthBar.sprite = healthBarSprites[health];
-
-        // Update the Bullet Text
-        bulletText.text = "x " + bullet;
-
-        float moveInput = Input.GetAxis("Horizontal");
-
-        rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
-
-        // Ground check
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
-
-        // Set the sprite based on the player's vertical velocity
-        if (rb.velocity.y > 0.1f && !isGrounded)
-        {
-            spriteRenderer.sprite = onJumping;
-        }
-        else if (rb.velocity.y < -0.1f && !isGrounded)
-        {
-            spriteRenderer.sprite = onFalling;
-        }
-
-        if (moveInput != 0)
-        {
-            transform.localScale = new Vector3(Mathf.Sign(moveInput), 1, 1);
-            animator.SetBool("isRunning", true);
-            timeSinceLastMove = 0f; // Reset the timer
-        }
-        else
-        {
-            animator.SetBool("isRunning", false);
-            timeSinceLastMove += Time.deltaTime;
-
-            if (timeSinceLastMove >= idleTimeLimit)
-            {
-                moveSpeed = defaultSpeed;
-                animator.speed = 1;
-                StartCoroutine(IncreaseSpeedAfterDelay(1.5f)); // Restart the coroutine
-            }
-        }
-
-        if (isGrounded && Input.GetKeyDown(KeyCode.W))
-        {
-            rb.velocity = Vector2.up * jumpForce;
-        }
-
-        if (rb.velocity.y < 0)
-        {
-            rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-        }
-
-        // Reset animation speed to 1 if not increasing speed
-        if (moveSpeed == initialSpeed && animator != null)
-        {
-            animator.speed = 1;
-            animator.SetBool("isRunning", false);
-        }
+        UpdateUI();
+        HandleMovement();
+        HandleJumping();
+        HandleIdleState();
     }
 
     void FixedUpdate()
@@ -147,9 +84,9 @@ public class Player : Character, IShootable
                 bullet--;
                 GameObject newBullet = Instantiate(BulletPrefab, BulletSpawnPoint.position, quaternion.identity);
                 newBullet.GetComponent<Weapon>().Init(1, this);
-                newBullet.transform.localScale = new Vector3(transform.localScale.x, 1, 1); // Set bullet direction
+                newBullet.transform.localScale = new Vector3(transform.localScale.x, 1, 1);
                 CoolDown = 0;
-                NextFireTime = CoolDown + 2f; // Set the next fire time to 2 seconds after the current cooldown
+                NextFireTime = CoolDown + 2f;
             }
             else
             {
@@ -163,7 +100,6 @@ public class Player : Character, IShootable
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
-            // animator.SetBool("isGrounded", true);
         }
     }
 
@@ -172,7 +108,6 @@ public class Player : Character, IShootable
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = false;
-            // animator.SetBool("isGrounded", false);
         }
     }
 
@@ -183,7 +118,81 @@ public class Player : Character, IShootable
         if (animator != null)
         {
             animator.speed = 3;
-            animator.SetBool("isRunning", true); // Set isRunning to true after speed increase
+            animator.SetBool("isRunning", true);
+        }
+    }
+
+    public override void TakeDamage(int damage)
+    {
+        health -= damage;
+        Debug.Log($"{gameObject.name} took damage: {damage}, new health: {health}");
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void UpdateUI()
+    {
+        healthBar.sprite = healthBarSprites[health];
+        bulletText.text = "x " + bullet;
+    }
+
+    private void HandleMovement()
+    {
+        float moveInput = Input.GetAxis("Horizontal");
+        rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
+
+        if (moveInput != 0)
+        {
+            transform.localScale = new Vector3(Mathf.Sign(moveInput), 1, 1);
+            animator.SetBool("isRunning", true);
+            timeSinceLastMove = 0f;
+        }
+        else
+        {
+            animator.SetBool("isRunning", false);
+            timeSinceLastMove += Time.deltaTime;
+        }
+    }
+
+    private void HandleJumping()
+    {
+        if (isGrounded && Input.GetKeyDown(KeyCode.W))
+        {
+            rb.velocity = Vector2.up * jumpForce;
+        }
+
+        if (rb.velocity.y < 0)
+        {
+            rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+        }
+
+        if (rb.velocity.y > 0.1f && !isGrounded)
+        {
+            spriteRenderer.sprite = onJumping;
+        }
+        else if (rb.velocity.y < -0.1f && !isGrounded)
+        {
+            spriteRenderer.sprite = onFalling;
+        }
+    }
+
+    private void HandleIdleState()
+    {
+        if (timeSinceLastMove >= idleTimeLimit)
+        {
+            moveSpeed = defaultSpeed;
+            animator.speed = 1;
+            StartCoroutine(IncreaseSpeedAfterDelay(1.5f));
+        }
+
+        if (moveSpeed == initialSpeed && animator != null)
+        {
+            animator.speed = 1;
+            animator.SetBool("isRunning", false);
         }
     }
 }

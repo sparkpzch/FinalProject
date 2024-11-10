@@ -1,18 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class Enemy : Character
+public class Vulture : Character
 {
     [Header("Components")]
     [SerializeField] private Rigidbody2D rb2d;
     [SerializeField] private BoxCollider2D enemyHitBox;
 
+    [Header("Enemy Settings")]
+    public BoxCollider2D enemyFeetCollider;
+
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
-        enemyHitBox = GetComponent<BoxCollider2D>();
         health = 1;
+
+        // Ignore collision between player and enemyFeetCollider
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            Collider2D playerCollider = player.GetComponent<Collider2D>();
+            if (playerCollider != null)
+            {
+                Physics2D.IgnoreCollision(enemyFeetCollider, playerCollider);
+            }
+        }
     }
 
     void Update()
@@ -38,6 +52,16 @@ public class Enemy : Character
             {
                 player.TakeDamage(1);
             }
+        }
+    }
+
+    public override void TakeDamage(int damage)
+    {
+        health -= damage;
+        Debug.Log($"{gameObject.name} took damage: {damage}, new health: {health}");
+        if (health <= 0)
+        {
+            Die();
         }
     }
 }
