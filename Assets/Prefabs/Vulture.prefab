@@ -230,7 +230,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   chaseRange: 1.5
   chaseSpeed: 1
-  detectionDistance: 1
+  detectionDistance: 2
   jumpForce: 2
   jumpCooldown: 2
 --- !u!95 &1800193282686694433

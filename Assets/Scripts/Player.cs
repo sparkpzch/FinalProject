@@ -117,7 +117,7 @@ public class Player : Character, IShootable
         moveSpeed = initialSpeed * 2;
         if (animator != null)
         {
-            animator.speed = 3;
+            animator.speed = 2;
             animator.SetBool("isRunning", true);
         }
     }

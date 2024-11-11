@@ -688,6 +688,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1107460217800903839, guid: 2abb85ccc811c9548bb18717d38a404e, type: 3}
+      propertyPath: m_ChunkCullingBounds.x
+      value: 0.0714286
+      objectReference: {fileID: 0}
+    - target: {fileID: 1107460217800903839, guid: 2abb85ccc811c9548bb18717d38a404e, type: 3}
+      propertyPath: m_ChunkCullingBounds.y
+      value: 0.0714286
+      objectReference: {fileID: 0}
+    - target: {fileID: 2437282199270598544, guid: 2abb85ccc811c9548bb18717d38a404e, type: 3}
+      propertyPath: m_ChunkCullingBounds.x
+      value: 0.0714286
+      objectReference: {fileID: 0}
+    - target: {fileID: 2437282199270598544, guid: 2abb85ccc811c9548bb18717d38a404e, type: 3}
+      propertyPath: m_ChunkCullingBounds.y
+      value: 0.0714286
+      objectReference: {fileID: 0}
     - target: {fileID: 4537135605510632751, guid: 2abb85ccc811c9548bb18717d38a404e, type: 3}
       propertyPath: m_Name
       value: Main Palette
