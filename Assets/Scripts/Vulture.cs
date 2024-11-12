@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Vulture : Character
 {
@@ -42,7 +41,7 @@ public class Vulture : Character
             if (bullet != null)
             {
                 TakeDamage(bullet.Damage);
-                Destroy(collision.gameObject); // Destroy the bullet after it hits the enemy
+                Destroy(collision.gameObject);
             }
         }
         else if (collision.gameObject.CompareTag("Player"))
@@ -58,10 +57,21 @@ public class Vulture : Character
     public override void TakeDamage(int damage)
     {
         health -= damage;
-        Debug.Log($"{gameObject.name} took damage: {damage}, new health: {health}");
         if (health <= 0)
         {
             Die();
         }
+    }
+
+    public override void Die()
+    {
+        Animator animator = GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.SetTrigger("Dead");
+        }
+        rb2d.velocity = Vector2.zero;
+        enemyHitBox.enabled = false;
+        Destroy(gameObject, .5f);
     }
 }

@@ -4,12 +4,23 @@ using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
-    protected int health;
+    [Header("Stats")]
+    [SerializeField] protected int health;
+
+    public int Health
+    {
+        get { return health; }
+        set
+        {
+            health = value;
+            if (health <= 0)
+            {
+                Die();
+            }
+        }
+    }
 
     public abstract void TakeDamage(int damage);
 
-    public virtual void Die()
-    {
-        Debug.Log($"{gameObject.name} died.");
-    }
+    public abstract void Die();
 }

@@ -206,6 +206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1176074b77c80de48875b4ce0a341976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
   rb2d: {fileID: 0}
   enemyHitBox: {fileID: 8432238602739644861}
   enemyFeetCollider: {fileID: 1597151842308185555}
@@ -230,9 +231,9 @@ MonoBehaviour:
   animator: {fileID: 0}
   chaseRange: 1.5
   chaseSpeed: 1
-  detectionDistance: 2
+  detectionDistance: 4
   jumpForce: 2
-  jumpCooldown: 2
+  jumpCooldown: 1
 --- !u!95 &1800193282686694433
 Animator:
   serializedVersion: 5

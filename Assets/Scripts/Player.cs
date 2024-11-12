@@ -6,7 +6,7 @@ using Unity.Mathematics;
 public class Player : Character, IShootable
 {
     [Header("Player Stats")]
-    [SerializeField] private int initialHealth = 2;
+    private int initialHealth = 2;
     public int bullet = 0;
 
     [Header("Player Controls")]
@@ -19,10 +19,6 @@ public class Player : Character, IShootable
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
-
-    [Header("Sprites Animation")]
-    [SerializeField] private Sprite onJumping;
-    [SerializeField] private Sprite onFalling;
 
     [Header("UI Components")]
     public Image healthBar;
@@ -47,7 +43,8 @@ public class Player : Character, IShootable
 
     void Start()
     {
-        health = initialHealth;
+        gameObject.tag = "Player";
+        Health = initialHealth;
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
@@ -77,7 +74,7 @@ public class Player : Character, IShootable
 
     public void Shoot()
     {
-        if (bullet > 0 && Input.GetKeyDown(KeyCode.Space) && CoolDown >= NextFireTime)
+        if (bullet > 0 && Input.GetKeyDown(KeyCode.Space) && CoolDown >= NextFireTime && isGrounded)
         {
             if (BulletPrefab != null && BulletSpawnPoint != null)
             {
@@ -117,16 +114,16 @@ public class Player : Character, IShootable
         moveSpeed = initialSpeed * 2;
         if (animator != null)
         {
-            animator.speed = 2;
+            animator.speed = 1;
             animator.SetBool("isRunning", true);
         }
     }
 
     public override void TakeDamage(int damage)
     {
-        health -= damage;
-        Debug.Log($"{gameObject.name} took damage: {damage}, new health: {health}");
-        if (health <= 0)
+        Health -= damage;
+        Debug.Log($"{gameObject.name} took damage: {damage}, new health: {Health}");
+        if (Health <= 0)
         {
             Die();
         }
@@ -134,7 +131,7 @@ public class Player : Character, IShootable
 
     private void UpdateUI()
     {
-        healthBar.sprite = healthBarSprites[health];
+        healthBar.sprite = healthBarSprites[Health];
         bulletText.text = "x " + bullet;
     }
 
@@ -163,21 +160,38 @@ public class Player : Character, IShootable
         if (isGrounded && Input.GetKeyDown(KeyCode.W))
         {
             rb.velocity = Vector2.up * jumpForce;
+            animator.SetBool("isJump", true);
+            FlipPlayer();
         }
 
         if (rb.velocity.y < 0)
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+            FlipPlayer();
         }
 
         if (rb.velocity.y > 0.1f && !isGrounded)
         {
-            spriteRenderer.sprite = onJumping;
+            animator.SetBool("isJump", true);
+            FlipPlayer();
         }
         else if (rb.velocity.y < -0.1f && !isGrounded)
         {
-            spriteRenderer.sprite = onFalling;
+            animator.SetBool("isJump", false);
         }
+        else if (isGrounded)
+        {
+            animator.SetBool("isJump", false);
+        }
+        else
+        {
+            animator.SetBool("isJump", false);
+        }
+    }
+
+    private void FlipPlayer()
+    {
+        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
 
     private void HandleIdleState()
@@ -194,5 +208,10 @@ public class Player : Character, IShootable
             animator.speed = 1;
             animator.SetBool("isRunning", false);
         }
+    }
+
+    public override void Die()
+    {
+        Debug.Log($"{gameObject.name} died");
     }
 }
