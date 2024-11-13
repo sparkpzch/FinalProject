@@ -229,7 +229,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   animator: {fileID: 0}
-  chaseRange: 1.5
+  chaseRange: 3
   chaseSpeed: 1
   detectionDistance: 4
   jumpForce: 2
