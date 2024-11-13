@@ -41,6 +41,11 @@ public class EnemyChasePlayer : MonoBehaviour
 
     void Update()
     {
+        if (player == null)
+        {
+            return;
+        }
+
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
 
         if (PlayerInRange())
