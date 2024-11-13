@@ -77,7 +77,7 @@ public class Player : Character, IShootable
 
     public void Shoot()
     {
-        if (bullet > 0 && Input.GetKeyDown(KeyCode.Space) && CoolDown >= NextFireTime && isGrounded)
+        if (bullet > 0 && Input.GetKeyDown(KeyCode.Space) && CoolDown >= NextFireTime)
         {
             if (BulletPrefab != null && BulletSpawnPoint != null)
             {
@@ -171,19 +171,19 @@ public class Player : Character, IShootable
         {
             rb.velocity = Vector2.up * jumpForce;
             animator.SetBool("isJump", true);
-            FlipPlayer();
+            // FlipPlayer();
         }
 
         if (rb.velocity.y < 0)
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-            FlipPlayer();
+            // FlipPlayer();
         }
 
         if (rb.velocity.y > 0.1f && !isGrounded)
         {
             animator.SetBool("isJump", true);
-            FlipPlayer();
+            // FlipPlayer();
         }
         else if (rb.velocity.y < -0.1f && !isGrounded)
         {
@@ -199,10 +199,10 @@ public class Player : Character, IShootable
         }
     }
 
-    private void FlipPlayer()
-    {
-        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-    }
+    // private void FlipPlayer()
+    // {
+    //     transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+    // }
 
     private void HandleIdleState()
     {
