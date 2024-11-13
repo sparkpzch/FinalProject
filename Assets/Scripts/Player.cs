@@ -24,6 +24,7 @@ public class Player : Character, IShootable
     public Image healthBar;
     public Sprite[] healthBarSprites;
     public TMPro.TextMeshProUGUI bulletText;
+    public GameObject restartMenu;
 
     [Header("Jumping Variables")]
     [SerializeField] private float fallMultiplier = 1f;
@@ -41,6 +42,7 @@ public class Player : Character, IShootable
     [field: SerializeField] public float CoolDown { get; set; }
     [field: SerializeField] public float NextFireTime { get; set; }
 
+
     void Start()
     {
         gameObject.tag = "Player";
@@ -56,6 +58,7 @@ public class Player : Character, IShootable
         NextFireTime = 2f;
 
         StartCoroutine(IncreaseSpeedAfterDelay(1.5f));
+        restartMenu.SetActive(false);
     }
 
     void Update()
@@ -122,7 +125,7 @@ public class Player : Character, IShootable
     public override void TakeDamage(int damage)
     {
         Health -= damage;
-        Debug.Log($"{gameObject.name} took damage: {damage}, new health: {Health}");
+        animator.SetTrigger("Hurt");
         if (Health <= 0)
         {
             Die();
@@ -131,7 +134,14 @@ public class Player : Character, IShootable
 
     private void UpdateUI()
     {
-        healthBar.sprite = healthBarSprites[Health];
+        if (Health <= 0)
+        {
+            healthBar.sprite = healthBarSprites[0];
+        }
+        else
+        {
+            healthBar.sprite = healthBarSprites[Health];
+        }
         bulletText.text = "x " + bullet;
     }
 
@@ -212,6 +222,11 @@ public class Player : Character, IShootable
 
     public override void Die()
     {
-        Debug.Log($"{gameObject.name} died");
+        animator.SetTrigger("Die");
+        rb.velocity = Vector2.up * jumpForce;
+        rb.gravityScale = 2;
+        GetComponent<Collider2D>().enabled = false;
+        Destroy(gameObject, 0.7f);
+        restartMenu.SetActive(true);
     }
 }
