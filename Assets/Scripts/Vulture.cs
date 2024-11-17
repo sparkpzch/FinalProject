@@ -26,6 +26,7 @@ public class Vulture : Character
                 Physics2D.IgnoreCollision(enemyFeetCollider, playerCollider);
             }
         }
+        GameManager.Instance.RegisterVulture(this);
     }
 
     void Update()
@@ -72,6 +73,7 @@ public class Vulture : Character
         }
         rb2d.velocity = Vector2.zero;
         enemyHitBox.enabled = false;
+        GameManager.Instance.UnregisterVulture(this);
         Destroy(gameObject, .5f);
     }
 }

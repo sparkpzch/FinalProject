@@ -18,7 +18,6 @@ public class Player : Character, IShootable
     [Header("Components")]
     private Rigidbody2D rb;
     private Animator animator;
-    private SpriteRenderer spriteRenderer;
 
     [Header("UI Components")]
     public Image healthBar;
@@ -37,6 +36,7 @@ public class Player : Character, IShootable
     public float checkRadius;
     public LayerMask whatIsGround;
 
+    // IShootable implementation
     [field: SerializeField] public Transform BulletSpawnPoint { get; set; }
     [field: SerializeField] public GameObject BulletPrefab { get; set; }
     [field: SerializeField] public float CoolDown { get; set; }
@@ -48,7 +48,6 @@ public class Player : Character, IShootable
         gameObject.tag = "Player";
         Health = initialHealth;
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         rb.freezeRotation = true;
 
@@ -171,19 +170,16 @@ public class Player : Character, IShootable
         {
             rb.velocity = Vector2.up * jumpForce;
             animator.SetBool("isJump", true);
-            // FlipPlayer();
         }
 
         if (rb.velocity.y < 0)
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-            // FlipPlayer();
         }
 
         if (rb.velocity.y > 0.1f && !isGrounded)
         {
             animator.SetBool("isJump", true);
-            // FlipPlayer();
         }
         else if (rb.velocity.y < -0.1f && !isGrounded)
         {
@@ -198,11 +194,6 @@ public class Player : Character, IShootable
             animator.SetBool("isJump", false);
         }
     }
-
-    // private void FlipPlayer()
-    // {
-    //     transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-    // }
 
     private void HandleIdleState()
     {

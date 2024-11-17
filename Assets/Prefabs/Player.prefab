@@ -386,6 +386,7 @@ MonoBehaviour:
   - {fileID: 1910270558, guid: d4dfc23620ecd4892a1be37854f1f6f9, type: 3}
   - {fileID: -1692766129, guid: d4dfc23620ecd4892a1be37854f1f6f9, type: 3}
   bulletText: {fileID: 3247802345477364172}
+  restartMenu: {fileID: 0}
   fallMultiplier: 1.5
   groundCheck: {fileID: 9193041622456622560}
   checkRadius: 0.05
