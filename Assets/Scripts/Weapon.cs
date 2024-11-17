@@ -48,6 +48,10 @@ public abstract class Weapon : MonoBehaviour
                 OnHitWith(character);
             }
         }
+        else if (other.gameObject.CompareTag("Ground"))
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Update()
